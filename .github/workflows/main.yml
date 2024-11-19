@@ -1,0 +1,8 @@
+name: Demo Tests
+run-name: ubuntu-latest
+on: [push]
+jobs:
+  unit_tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    - run: python3 -m unittest discover tests

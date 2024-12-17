@@ -2,7 +2,6 @@ import unittest
 from typing import Callable, TypeVar
 from _pytest.python_api import RaisesContext
 from parameterized import parameterized
-from contextlib import nullcontext as no_exception
 
 from tests.unit import circle, rectangle, square, triangle
 from . import cases

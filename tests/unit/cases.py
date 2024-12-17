@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 import pytest
-from _pytest.mark import structures
 from contextlib import nullcontext as no_exception
 
 import math

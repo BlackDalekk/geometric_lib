@@ -1,42 +1,135 @@
 import unittest
-import math
+from typing import Callable, TypeVar
+from _pytest.python_api import RaisesContext
+from parameterized import parameterized
+from contextlib import nullcontext as no_exception
 
 from tests.unit import circle, rectangle, square, triangle
+from . import cases
+
+T = TypeVar("T")
 
 
 class TestMathFormuls(unittest.TestCase):
-    def test_circle_area(self) -> None:
-        res = circle.area(1)
-        self.assertEqual(res, math.pi)
+    @parameterized.expand((cases.test_circle_area_cases))
+    def test_circle_area(
+        self,
+        input_data: int | float,
+        expected_data: int | float,
+        expected_exception: RaisesContext,
+    ) -> None:
+        self._check(
+            circle.area,
+            (input_data,),
+            expected_data,
+            expected_exception,
+        )
 
-    def test_circle_perimeter(self) -> None:
-        res = circle.perimeter(1)
-        self.assertEqual(res, 2 * math.pi)
+    @parameterized.expand((cases.test_circle_perimeter))
+    def test_circle_perimeter(
+        self,
+        input_data: int | float,
+        expected_data: int | float,
+        expected_exception: RaisesContext,
+    ) -> None:
+        self._check(
+            circle.perimeter,
+            (input_data,),
+            expected_data,
+            expected_exception,
+        )
 
-    def test_rectangle_get_rectangle_area(self) -> None:
-        res = rectangle.get_rectangle_area(1, 2)
-        self.assertEqual(res, 2)
+    @parameterized.expand((cases.test_rectangle_get_rectangle_area))
+    def test_rectangle_get_rectangle_area(
+        self,
+        input_data: tuple[int | float, int | float],
+        expected_data: int | float,
+        expected_exception: RaisesContext,
+    ) -> None:
+        self._check(
+            rectangle.get_rectangle_area,
+            input_data,
+            expected_data,
+            expected_exception,
+        )
 
-    def test_rectangle_get_rectangle_perimeter(self) -> None:
-        res = rectangle.get_rectangle_perimeter(1, 2)
-        self.assertEqual(res, 6)
+    @parameterized.expand((cases.test_rectangle_get_rectangle_perimeter))
+    def test_rectangle_get_rectangle_perimeter(
+        self,
+        input_data: tuple[int | float, int | float],
+        expected_data: int | float,
+        expected_exception: RaisesContext,
+    ) -> None:
+        self._check(
+            rectangle.get_rectangle_perimeter,
+            input_data,
+            expected_data,
+            expected_exception,
+        )
 
-    def test_square_area(self) -> None:
-        res = square.area(1)
-        self.assertEqual(res, 1)
+    @parameterized.expand((cases.test_square_area))
+    def test_square_area(
+        self,
+        input_data: int | float,
+        expected_data: int | float,
+        expected_exception: RaisesContext,
+    ) -> None:
+        self._check(
+            square.area,
+            (input_data, ),
+            expected_data,
+            expected_exception,
+        )
 
-    def test_square_perimeter(self) -> None:
-        res = square.perimeter(1)
-        self.assertEqual(res, 4)
+    @parameterized.expand((cases.test_square_perimeter))
+    def test_square_perimeter(
+        self,
+        input_data: int | float,
+        expected_data: int | float,
+        expected_exception: RaisesContext,
+    ) -> None:
+        self._check(
+            square.perimeter,
+            (input_data, ),
+            expected_data,
+            expected_exception,
+        )
 
-    def test_triangle_area(self) -> None:
-        res = triangle.area(1, 2)
-        self.assertEqual(res, 1)
+    @parameterized.expand((cases.test_triangle_area))
+    def test_triangle_area(
+        self,
+        input_data: tuple[int | float, int | float],
+        expected_data: int | float,
+        expected_exception: RaisesContext,
+    ) -> None:
+        self._check(
+            triangle.area,
+            input_data,
+            expected_data,
+            expected_exception,
+        )
 
-    def test_triangle_perimeter(self) -> None:
-        res = triangle.perimeter(1, 2, 3)
-        self.assertEqual(res, 6)
+    @parameterized.expand((cases.test_triangle_perimeter))
+    def test_triangle_perimeter(
+        self,
+        input_data: tuple[int | float, int | float, int | float],
+        expected_data: int | float,
+        expected_exception: RaisesContext,
+    ) -> None:
+        self._check(
+            triangle.perimeter,
+            input_data,
+            expected_data,
+            expected_exception,
+        )
 
-
-if __name__ == "__main__":
-    unittest.main()
+    def _check(
+        self,
+        function: Callable,
+        args: tuple,
+        expected_result: T,
+        expected_exception: RaisesContext,
+    ) -> None:
+        with expected_exception:
+            result = function(*args)
+            self.assertEqual(result, expected_result)
